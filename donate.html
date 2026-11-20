@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Donate | Abdul Kasmu Islamic Charity Organization</title>
+<style>
+:root{--bg:#fbf8f1;--card:#fff;--t:#1f2a24;--m:#5d6b63;--a:#1f6b4a;--l:#e4ddcc}
+@media(prefers-color-scheme:dark){:root{--bg:#121a16;--card:#1b2620;--t:#eef2ee;--m:#a3b2a8;--a:#4fbf8b;--l:#2b3a31}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t);font:17px/1.5 system-ui,sans-serif;padding:20px}
+.w{max-width:520px;margin:0 auto}
+h1{font-size:24px;margin:6px 0}
+h2{font-size:18px;margin:22px 0 8px}
+p{color:var(--m);margin:6px 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip,.tab{background:var(--card);color:var(--t);border:2px solid var(--l);border-radius:999px;padding:10px 16px;font:600 16px system-ui,sans-serif}
+.on{background:var(--a);border-color:var(--a);color:#fff}
+input{width:100%;margin-top:10px;padding:12px;border:2px solid var(--l);border-radius:12px;background:var(--card);color:var(--t);font-size:17px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.box{background:var(--card);border:2px solid var(--a);border-radius:16px;padding:8px 16px;margin:14px 0}
+.r{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--l)}
+.r:last-child{border:0}
+.r span{color:var(--m);font-size:14px;display:block}
+.r b{font-size:18px;word-break:break-all}
+.cp{background:var(--a);color:#fff;border:0;border-radius:999px;padding:8px 16px;font:600 14px system-ui,sans-serif}
+.go{display:block;text-align:center;background:var(--a);color:#fff;border-radius:999px;padding:15px;font:600 17px system-ui,sans-serif;text-decoration:none;margin-top:16px}
+.sum{background:var(--card);border:1px solid var(--l);border-radius:12px;padding:12px 16px;margin:12px 0}
+</style></head><body><div class="w">
+<h1>Donate</h1>
+<p>Abdul Kasmu Islamic Charity Organization, Bubulo, Mbale, Uganda</p>
+
+<h2>1. Choose an amount</h2>
+<div class="chips" id="chips"></div>
+<input id="amt" type="number" inputmode="decimal" placeholder="Or type your own amount in euros">
+
+<h2>2. Choose how to send</h2>
+<div class="tabs" id="tabs"></div>
+<div class="box" id="details"></div>
+
+<h2>3. Tell us</h2>
+<div class="sum" id="sum"></div>
+<a class="go" id="wa" href="#">Send my receipt on WhatsApp</a>
+<p style="text-align:center;margin-top:16px"><a href="/" style="color:var(--a)">Back to our website</a></p>
+</div>
+<script>
+var amounts=[1,10,30,60,160,350],amount=10,method='wu';
+var data={
+wu:{name:'Western Union',rows:[['Receiver first name','Kenneth'],['Receiver last name','Nakisisa'],['Country','Uganda'],['City','Mbale']],note:'Ria and MoneyGram work the same way.'},
+bank:{name:'Bank transfer',rows:[['Bank','Equity Bank'],['Account name','Kenneth Nakisisa'],['Account number','1014103747435'],['SWIFT code','EQBLUGKA']],note:'Check the account name before you pay.'},
+mm:{name:'Mobile money',rows:[['Number','+256750134236'],['Name','Nakisisa Kenneth']],note:'Only if your app can send to Uganda mobile money.'}
+};
+function copy(t,b){try{navigator.clipboard.writeText(t);b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)}catch(e){}}
+function draw(){
+var ch=document.getElementById('chips');ch.innerHTML='';
+amounts.forEach(function(a){var b=document.createElement('button');b.className='chip'+(a===amount?' on':'');b.textContent='\u20ac'+a;b.onclick=function(){amount=a;document.getElementById('amt').value='';draw()};ch.appendChild(b)});
+var tb=document.getElementById('tabs');tb.innerHTML='';
+Object.keys(data).forEach(function(k){var b=document.createElement('button');b.className='tab'+(k===method?' on':'');b.textContent=data[k].name;b.onclick=function(){method=k;draw()};tb.appendChild(b)});
+var d=data[method],h='';
+d.rows.forEach(function(r,i){h+='<div class="r"><div><span>'+r[0]+'</span><b>'+r[1]+'</b></div><button class="cp" data-v="'+r[1]+'">Copy</button></div>'});
+h+='<p>'+d.note+'</p>';
+var box=document.getElementById('details');box.innerHTML=h;
+box.querySelectorAll('.cp').forEach(function(b){b.onclick=function(){copy(b.getAttribute('data-v'),b)}});
+document.getElementById('sum').innerHTML='You are sending <b>\u20ac'+amount+'</b> by <b>'+d.name+'</b>. After paying, send us the receipt screenshot, your name for our banner, and what your gift is for.';
+var msg='Assalamu alaikum, I have donated \u20ac'+amount+' by '+d.name+'. My name for the banner is: ';
+document.getElementById('wa').href='https://wa.me/256741344006?text='+encodeURIComponent(msg);
+}
+document.getElementById('amt').oninput=function(){var v=parseFloat(this.value);if(v>0){amount=v;draw2()}};
+function draw2(){var d=data[method];document.getElementById('sum').innerHTML='You are sending <b>\u20ac'+amount+'</b> by <b>'+d.name+'</b>. After paying, send us the receipt screenshot, your name for our banner, and what your gift is for.';document.getElementById('wa').href='https://wa.me/256741344006?text='+encodeURIComponent('Assalamu alaikum, I have donated \u20ac'+amount+' by '+d.name+'. My name for the banner is: ');document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on')})}
+draw();
+</script></body></html>
