@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Donate | Abdul Kasmu Islamic Charity Organization</title>
+<style>
+:root{--bg:#f4f1e8;--card:#fff;--t:#17231c;--m:#55645b;--a:#1f6b4a;--d:#124a32;--g:#c99a2e;--l:#ddd5bf}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1713;--card:#1a251f;--t:#f0f4f0;--m:#a8b8ae;--a:#3fae7a;--d:#16402c;--g:#e0b45a;--l:#2b3a31}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t);font:18px/1.5 system-ui,sans-serif}
+.top{background:var(--d);color:#fff;text-align:center;padding:28px 20px 30px}
+.top small{display:block;color:#e8d9a8;font-size:14px;letter-spacing:.5px}
+.top h1{font-size:38px;margin:6px 0}
+.top p{margin:0;font-size:18px;color:#e9f2ec}
+.w{max-width:560px;margin:0 auto;padding:20px}
+h2{font-size:22px;margin:26px 0 12px}
+h2 span{display:inline-block;background:var(--a);color:#fff;width:32px;height:32px;border-radius:50%;text-align:center;line-height:32px;font-size:18px;margin-right:8px}
+.amts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.amt{background:var(--card);color:var(--t);border:3px solid var(--l);border-radius:16px;padding:16px 0;font:700 22px system-ui,sans-serif}
+.on{background:var(--a)!important;border-color:var(--a)!important;color:#fff!important}
+label{display:block;font-weight:600;margin:14px 0 4px;font-size:17px}
+input,select{width:100%;padding:15px;border:3px solid var(--l);border-radius:14px;background:var(--card);color:var(--t);font-size:18px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{background:var(--card);color:var(--t);border:3px solid var(--l);border-radius:20px;padding:18px 8px;text-align:center;font:700 18px system-ui,sans-serif}
+.opt i{display:block;font-style:normal;font-size:44px;line-height:1.2}
+.opt small{display:block;font-weight:400;font-size:14px;color:var(--m)}
+.opt.on small{color:#e9f2ec}
+.sum{background:var(--card);border-left:6px solid var(--g);border-radius:12px;padding:14px 16px;font-size:19px;margin-top:14px}
+.go{display:block;width:100%;text-align:center;background:#25a05a;color:#fff;border:0;border-radius:999px;padding:20px;font:700 21px system-ui,sans-serif;text-decoration:none;margin-top:20px}
+.err{color:#c0392b;font-weight:600;margin-top:12px;min-height:22px}
+.priv{color:var(--m);font-size:15px;margin-top:10px}
+.back{text-align:center;margin:20px 0}
+.back a{color:var(--a);font-size:17px}
+</style></head><body>
+<div class="top"><small>ABDUL KASMU ISLAMIC CHARITY ORGANIZATION</small><h1>Donate</h1><p>Your gift reaches families in Uganda</p></div>
+<div class="w">
+<div id="s1">
+<h2><span>1</span>Choose an amount</h2>
+<div class="amts" id="amts"></div>
+<label for="amt">Or type your own amount (euros)</label>
+<input id="amt" type="number" inputmode="decimal" placeholder="&euro;">
+<h2><span>2</span>How would you like to give?</h2>
+<div class="opts" id="opts"></div>
+<h2><span>3</span>Your details</h2>
+<label>First name *</label><input id="fn" autocomplete="given-name">
+<label>Last name *</label><input id="ln" autocomplete="family-name">
+<label>Email *</label><input id="em" type="email" autocomplete="email">
+<label>Phone</label><input id="ph" type="tel" autocomplete="tel">
+<label>Country *</label><input id="co" autocomplete="country-name">
+<label>Address</label><input id="ad" autocomplete="street-address">
+<label>Name to write on our banner (or leave empty)</label><input id="bn">
+<label>My gift is for</label>
+<select id="gf"><option>Where most needed</option><option>Orphan feeding</option><option>Food package</option><option>Wheelchair</option><option>Water tap</option><option>Qurbani</option><option>Ramadan feeding</option></select>
+<div class="err" id="err"></div>
+<button class="go" id="send">Send my details</button>
+<p class="priv">Your details are not saved on this website. They reach us only when WhatsApp opens. We will then reply with the payment details.</p>
+</div>
+<div id="s2" style="display:none">
+<div class="sum" id="thanks"></div>
+<a class="go" id="wa" href="#" style="text-decoration:none">Open WhatsApp again</a>
+</div>
+<div class="back"><a href="/">Back to our website</a></div>
+</div>
+<script>
+var $=function(i){return document.getElementById(i)};
+var amounts=[1,10,30,60,160,350],amount=10,method='card';
+var qs=new URLSearchParams(location.search),q=parseFloat(qs.get('amt')),fo=qs.get('for')||'';
+if(q>0)amount=q;
+Array.prototype.forEach.call($('gf').options,function(o){if(o.text===fo)$('gf').value=o.text});
+var data={
+card:{icon:'\ud83d\udcb3',label:'Card / Google Pay',sub:'Mastercard, Visa',name:'card or Google Pay (in a money transfer app)'},
+wu:{icon:'\ud83c\udf0d',label:'Western Union',sub:'Ria, MoneyGram too',name:'Western Union'},
+bank:{icon:'\ud83c\udfe6',label:'Bank transfer',sub:'Equity Bank',name:'bank transfer'},
+mm:{icon:'\ud83d\udcf1',label:'Mobile money',sub:'Uganda number',name:'mobile money'}
+};
+var hs=location.hash.replace('#','');
+if(data[hs])method=hs;
+function esc(s){return String(s).replace(/[&<>"]/g,'')}
+function drawAmts(){var a=$('amts');a.innerHTML='';
+amounts.forEach(function(v){var b=document.createElement('button');b.className='amt'+(v===amount?' on':'');b.textContent='\u20ac'+v;b.onclick=function(){amount=v;$('amt').value='';drawAmts()};a.appendChild(b)})}
+function drawOpts(){var o=$('opts');o.innerHTML='';
+Object.keys(data).forEach(function(k){var d=data[k],b=document.createElement('button');b.className='opt'+(k===method?' on':'');b.innerHTML='<i>'+d.icon+'</i>'+d.label+'<small>'+d.sub+'</small>';b.onclick=function(){method=k;drawOpts()};o.appendChild(b)})}
+$('amt').oninput=function(){var v=parseFloat(this.value);if(v>0){amount=v;document.querySelectorAll('.amt').forEach(function(c){c.classList.remove('on')})}};
+drawAmts();drawOpts();
+if(amounts.indexOf(amount)<0)$('amt').value=amount;
+function link(){var t=['Assalamu alaikum, I want to donate.','Amount: \u20ac'+amount,'How I want to give: '+data[method].name,'For: '+$('gf').value,'Name: '+$('fn').value+' '+$('ln').value,'Email: '+$('em').value,'Phone: '+$('ph').value,'Country: '+$('co').value,'Address: '+$('ad').value,'Name for banner: '+$('bn').value,'','Please send me the payment details.'].join('\n');
+return 'https://wa.me/256741344006?text='+encodeURIComponent(t)}
+$('send').onclick=function(){
+if(!$('fn').value.trim()||!$('ln').value.trim()||$('em').value.indexOf('@')<1||!$('co').value.trim()){$('err').textContent='Please fill in the fields marked with *.';return}
+$('err').textContent='';var l=link();
+$('thanks').innerHTML='Thank you, <b>'+esc($('fn').value)+'</b>! WhatsApp is opening with your details. We will reply with the payment details for <b>\u20ac'+amount+'</b>. If it did not open, tap the green button.';
+$('wa').href=l;$('s1').style.display='none';$('s2').style.display='block';window.scrollTo(0,0);
+window.location.href=l};
+</script></body></html>
